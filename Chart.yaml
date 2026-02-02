@@ -9,9 +9,9 @@ dependencies:
   - name: redis
     alias: redis-front
     repository: "https://charts.bitnami.com/bitnami"
-    version: ">=17.2.0 <18.0.0"
+    version: "17.2.0"
 
   - name: redis
     alias: redis-back
     repository: "https://charts.bitnami.com/bitnami"
-    version: ">=16.8.0 <17.0.0"
+    version: "16.8.0"
