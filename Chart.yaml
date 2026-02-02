@@ -1,0 +1,19 @@
+apiVersion: v2
+name: redis-umbrella
+description: Umbrella chart deploying two Redis instances (front/back) as aliased dependencies
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+dependencies:
+  - name: redis
+    alias: redis-front
+    repository: "https://charts.bitnami.com/bitnami"
+    # Pin to the exact semver you need for the front
+    version: ">=17.2.0 <18.0.0"
+
+  - name: redis
+    alias: redis-back
+    repository: "https://charts.bitnami.com/bitnami"
+    # Pin to a different semver for the back
+    version: ">=16.8.0 <17.0.0"

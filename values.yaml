@@ -1,0 +1,50 @@
+# Top-level keys must match the dependency aliases: redis-front and redis-back
+# Confirm exact keys with the Bitnami Redis chart version you choose.
+
+redis-front:
+  fullnameOverride: "redis-front"
+  architecture: "standalone"
+  auth:
+    enabled: true
+    # Replace with secure value or use existingSecret (see README)
+    password: "REPLACE_WITH_STRONG_PASSWORD_FRONT"
+  persistence:
+    enabled: true
+    size: 4Gi
+    storageClass: ""
+  service:
+    type: ClusterIP
+  metrics:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+redis-back:
+  fullnameOverride: "redis-back"
+  architecture: "standalone"
+  auth:
+    enabled: true
+    # Replace with secure value or use existingSecret (see README)
+    password: "REPLACE_WITH_STRONG_PASSWORD_BACK"
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+  service:
+    type: ClusterIP
+  metrics:
+    enabled: false
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# If you want to use external/cluster-wide settings, use `global:` here.
