@@ -2,7 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "helm"
     # Directory containing the umbrella Chart.yaml (adjust if needed)
-    directory: "/charts/redis-umbrella"
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
