@@ -9,11 +9,9 @@ dependencies:
   - name: redis
     alias: redis-front
     repository: "https://charts.bitnami.com/bitnami"
-    # Pin to the exact semver you need for the front
     version: ">=17.2.0 <18.0.0"
 
   - name: redis
     alias: redis-back
     repository: "https://charts.bitnami.com/bitnami"
-    # Pin to a different semver for the back
     version: ">=16.8.0 <17.0.0"
