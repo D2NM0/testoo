@@ -5,7 +5,7 @@ updates:
     directory: "/charts/redis-umbrella"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     # Ignore the backend dependency so Dependabot will only open updates for the front redis
     ignore:
       - dependency-name: "redis-back"
