@@ -12,4 +12,3 @@ updates:
     # Optional: add labels so PRs are easier to triage
     labels:
       - "dependencies"
-      - "automated"
