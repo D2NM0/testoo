@@ -1,0 +1,60 @@
+name: Check Datadog Chart Version & Create Change
+
+on:
+  push:
+    paths:
+      - 'charts/datadog-*/Chart.yaml'
+
+jobs:
+  check-version-change:
+    name: Check if Datadog Chart version changed
+    runs-on: ubuntu-latest
+    outputs:
+      version-changed: ${{ steps.set-output.outputs.version-changed }}
+      new-version: ${{ steps.set-output.outputs.new-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get previous commit
+        id: git-previous
+        run: |
+          echo "PREV_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+
+      - name: Read current versions
+        id: read-current
+        run: |
+          for file in charts/datadog-*/Chart.yaml; do
+            ver=$(yq e '.version' "$file")
+            echo "$file current version: $ver"
+            echo "$file=$ver" >> versions.txt
+          done
+
+      - name: Read previous versions
+        id: read-previous
+        run: |
+          git show $PREV_COMMIT:charts/datadog-dev/Chart.yaml > old-dev.yaml || true
+          git show $PREV_COMMIT:charts/datadog-nprd/Chart.yaml > old-nprd.yaml || true
+          git show $PREV_COMMIT:charts/datadog-prod/Chart.yaml > old-prod.yaml || true
+          for file in old-*.yaml; do
+            ver=$(yq e '.version' "$file")
+            echo "$file old version: $ver"
+            echo "$file=$ver" >> old_versions.txt
+          done
+
+      - name: Compare versions
+        id: set-output
+        run: |
+          changed=false
+          new_version=""
+          for env in dev nprd prod; do
+            cur=$(yq e '.version' "charts/datadog-$env/Chart.yaml")
+            old=$(yq e '.version' "old-$env.yaml")
+            if [ "$cur" != "$old" ]; then
+              changed=true
+              new_version="$cur"
+            fi
+          done
+          echo "version-changed=$changed" >> $GITHUB_OUTPUT
+          echo "new-version=$new_version" >> $GITHUB_OUTPUT
+
