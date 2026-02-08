@@ -1,0 +1,50 @@
+datadog:
+  apmtraceportforward: true
+  datadog:
+    clusterName: prod-09-17de
+    tags: [manawa-cluster:prod-09-17de, platform:ccdp, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  clusterChecksRunner:
+    env:
+      - name: DD_KUBERNETES_APISERVER_CLIENT_TIMEOUT
+        value : 120
+    priorityClassName: datadog-priority-class
+    resources:
+      requests:
+        cpu: 800m
+        memory: 1024Mi
+      limits:
+        cpu: 8000m
+        memory: 8000Mi
+    deploymentAnnotations:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+  agents:
+    podLabels:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+  clusterAgent:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1200m
+        memory: 4096Mi
+    deploymentAnnotations:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: prod-09-17de
+      manawa/environment: prod

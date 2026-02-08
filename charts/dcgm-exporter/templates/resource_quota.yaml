@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+  name: dcgm-exporter-resource-quota
+  namespace: obs-dcgm-exporter
+spec:
+  hard:
+    pods: "50"
+  scopeSelector:
+    matchExpressions:
+    - operator: In
+      scopeName: PriorityClass
+      values:
+      - system-node-critical

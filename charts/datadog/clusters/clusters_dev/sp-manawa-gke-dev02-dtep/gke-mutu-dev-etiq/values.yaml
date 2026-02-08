@@ -1,0 +1,37 @@
+datadog:
+  datadog:
+    clusterName: gke-mutu-dev-etiq
+    tags: [manawa-cluster:gke-mutu-dev-etiq, managed_by:observability_team, cluster_slo:true, obs-env:dev]
+    # nodeLabelsAsTags: {"beta.kubernetes.io/os":"node_os","datacenter":"zone","kubernetes.io/hostname":"node_name","kubernetes.io/role":"node_role","environment":"environment_from_node","node.kubernetes.io/instance-type":"instance_type"}
+    # kubeStateMetricsCore:
+    #   labelsAsTags:
+    #     node:
+    #       environment: environment_from_node
+    #       node.kubernetes.io/instance-type: instance_type
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-dev-etiq
+      manawa/environment: dev

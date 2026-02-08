@@ -1,0 +1,62 @@
+datadog:
+  datadog:
+    clusterName: gke-scdp-nprd-mdio
+    tags: [manawa-cluster:gke-scdp-nprd-mdio, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+    fluentbit_service: true
+    env:
+      - name: DD_DATA_STREAMS_ENABLED
+        value: 'false'
+      - name: DD_APPSEC_ENABLED
+        value: 'false'
+  clusterChecksRunner:
+    replicas: 2
+    priorityClassName: datadog-priority-class
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+      limits:
+        cpu: 2000m
+        memory: 3072Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+  agents:
+    containers:
+      agent:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1024Mi
+          limits:
+            cpu: 2000m
+            memory: 4096Mi
+    podLabels:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+  clusterAgent:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 2048Mi
+      limits:
+        cpu: 1200m
+        memory: 4096Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-nprd-mdio
+      manawa/environment: prep

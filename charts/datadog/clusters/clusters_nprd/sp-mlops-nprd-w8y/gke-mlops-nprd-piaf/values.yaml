@@ -1,0 +1,33 @@
+global:
+  cloud_provider: gke
+datadog:
+  datadog:
+    clusterName:  gke-mlops-nprd-piaf
+    tags: [manawa-cluster: gke-mlops-nprd-piaf, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name:  gke-mlops-nprd-piaf
+      manawa/environment: prep

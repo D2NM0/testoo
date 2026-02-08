@@ -1,0 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dcgm-tenant-admin
+  namespace: obs-dcgm-exporter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tenant-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: GR_d2579b78ad7f4082acd6813c74420faa_ThirdParty_aCJp8mQ5RMi6KrKK@adeo.com
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: daemonset-manager
+  namespace: obs-dcgm-exporter
+rules:
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dcgm-daemonset-manager-binding
+  namespace: obs-dcgm-exporter
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: GR_d2579b78ad7f4082acd6813c74420faa_ThirdParty_aCJp8mQ5RMi6KrKK@adeo.com
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: daemonset-manager

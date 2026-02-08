@@ -1,0 +1,53 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: operator-manager-obs
+  namespace: datadog-agent
+rules:
+  - apiGroups: ["opentelemetry.io"]
+    resources:
+    - opentelemetrycollectors
+    - opentelemetrycollectors/scale
+    verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+    - clusterrolebindings
+    - clusterroles
+    - rolebindings
+    - roles
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups: ["datadoghq.com"]
+    resources:
+    - datadogmetrics
+    verbs:
+    - get
+    - list
+    - watch
+    - delete
+    - create
+    - update
+    - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: operator-manager-binding-obs
+  namespace: datadog-agent
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: GR_d2579b78ad7f4082acd6813c74420faa_ThirdParty_aCJp8mQ5RMi6KrKK@adeo.com
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: operator-manager-obs

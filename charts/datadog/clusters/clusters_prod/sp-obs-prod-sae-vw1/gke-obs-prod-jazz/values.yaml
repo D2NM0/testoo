@@ -1,0 +1,33 @@
+global:
+  cloud_provider: gke
+datadog:
+  datadog:
+    clusterName: gke-obs-prod-jazz
+    tags: [manawa-cluster:gke-obs-prod-jazz, managed_by:observability_team, cluster_slo:true, obs-env:main]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-obs-prod-jazz
+      manawa/environment: prod

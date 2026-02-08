@@ -1,0 +1,32 @@
+datadog:
+  apmtraceportforward: true
+  datadog:
+    clusterName: prod-11-c25f
+    tags: [manawa-cluster:prod-11-c25f, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    podLabels:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: prod-11-c25f
+      manawa/environment: prod

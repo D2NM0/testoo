@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-dp4p-nprd-date
+    tags: [manawa-cluster:gke-dp4p-nprd-date, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dp4p-nprd-date
+      manawa/environment: prep

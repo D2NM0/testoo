@@ -1,0 +1,45 @@
+datadog:
+  datadog:
+    clusterName: gke-hf3p-prod-nara
+    tags: [manawa-cluster:gke-hf3p-prod-nara, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    containers:
+      traceAgent:
+        # agents.containers.traceAgent.env -- Additional environment variables for the trace-agent container
+        env:
+          #- name: DD_APM_NON_LOCAL_TRAFFIC
+          #  value: "true"
+          - name: DD_APM_EXTRA_SAMPLE_RATE
+            value: ""
+          - name: DD_APM_MAX_TRACES_PER_SECOND
+            value: ""
+          - name: DD_APM_MAX_TPS
+            value: "500"
+          - name: DD_APM_ERROR_TPS
+            value: "50"
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-hf3p-prod-nara
+      manawa/environment: prod

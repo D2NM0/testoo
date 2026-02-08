@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-eslm-nprd-utah
+    tags: [manawa-cluster:gke-eslm-nprd-utah, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-eslm-nprd-utah
+      manawa/environment: prep

@@ -1,0 +1,58 @@
+datadog:
+  apmtraceportforward: true
+  datadog:
+    clusterName: nprd-07-ee88
+    tags: [manawa-cluster:nprd-07-ee88, platform:ccdp, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+    otlp:
+      receiver:
+        protocols:
+          # datadog.otlp.receiver.protocols.grpc - OTLP/gRPC configuration
+          grpc:
+            # datadog.otlp.receiver.protocols.grpc.enabled -- Enable the OTLP/gRPC endpoint
+            enabled: true
+            # datadog.otlp.receiver.procotols.grpc.endpoint -- OTLP/gRPC endpoint
+            endpoint: "0.0.0.0:4317"
+
+          # datadog.otlp.receiver.protocols.http - OTLP/HTTP configuration
+          http:
+            # datadog.otlp.receiver.protocols.http.enabled -- Enable the OTLP/HTTP endpoint
+            enabled: true
+            # datadog.otlp.receiver.protocols.http.endpoint -- OTLP/HTTP endpoint
+            endpoint: "0.0.0.0:4318"
+    apmtraceportforward: true
+  clusterChecksRunner:
+    replicas: 2
+    priorityClassName: datadog-priority-class
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+      limits:
+        cpu: 2000m
+        memory: 3072Mi
+    deploymentAnnotations:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+  agents:
+    podLabels:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: nprd-07-ee88
+      manawa/environment: prep

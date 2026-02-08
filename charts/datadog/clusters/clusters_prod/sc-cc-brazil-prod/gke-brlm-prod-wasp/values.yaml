@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-brlm-prod-wasp
+    tags: [manawa-cluster:gke-brlm-prod-wasp, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-brlm-prod-wasp
+      manawa/environment: prod

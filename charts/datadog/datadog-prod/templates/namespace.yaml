@@ -1,0 +1,31 @@
+{{- if .Values.adeo }}
+{{- if .Values.adeo.gitopsobs }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    cc-annotate/kopf-managed: "yes"
+    cc-cmdb/kopf-managed: "yes"
+    cc-networkpolicy/kopf-managed: "yes"
+    cc-opr/kopf-managed: "yes"
+    manawa/bu_index: "15"
+    manawa/bu_name: ADEO SERVICES
+    manawa/cluster_name: gke-mutu-prod-pyqt
+    manawa/product_id: 2606f0c1-477b-4f83-b275-0dc81954de2e
+    manawa/product_name: DATADOG
+    manawa/requester: "20008658"
+    manawa/requester_mail: denis.demuynck@adeo.com
+  labels:
+    app.kubernetes.io/instance: gke-mutu-prod-pyqt
+    kubernetes.io/metadata.name: datadog-agent
+    manawa.io/access: "true"
+    manawa/bu_index: "15"
+    manawa/cluster_name: gke-mutu-prod-pyqt
+    manawa/environment: prod
+    manawa/product_id: 2606f0c1-477b-4f83-b275-0dc81954de2e
+    networkpolicy: datadog-agent
+  name: gtdp-obs-aiven-factory
+
+{{ end }}
+{{ end }}

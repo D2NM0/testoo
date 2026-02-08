@@ -1,0 +1,79 @@
+adeo:
+  gitopsobs: true
+datadog:
+  datadog:
+    clusterName: gke-mutu-prod-pyqt
+    tags: [manawa-cluster:gke-mutu-prod-pyqt, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  clusterAgent:
+    env:
+      - { name: DD_EXTERNAL_METRICS_PROVIDER_MAX_AGE, value: "900" }
+      - { name: DD_EXTERNAL_METRICS_PROVIDER_BUCKET_SIZE, value: "900" }
+      - { name: DD_LOG_FORMAT_JSON, value: "true" }
+      - { name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED, value: "true" }
+    podAnnotations:
+      ad.datadoghq.com/cluster-agent.check_names: '["prometheus"]'
+      ad.datadoghq.com/cluster-agent.init_configs: '[{}]'
+      ad.datadoghq.com/cluster-agent.instances: |
+            [{
+              "prometheus_url": "http://%%host%%:5000/metrics",
+              "namespace": "datadog.cluster_agent",
+              "max_returned_metrics": "20000",
+              "metrics": [
+                "go_goroutines", "go_memstats_*", "process_*",
+                "api_requests",
+                "datadog_requests", "external_metrics",
+                "cluster_checks_*"
+              ]
+            }]
+      manawa/product_id: '2606f0c1-477b-4f83-b275-0dc81954de2e'
+    resources:
+      requests:
+        cpu: 1500m
+        memory: 2048Mi
+      limits:
+        cpu: 2000m
+        memory: 4096Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+  clusterChecksRunner:
+    replicas: 50
+    priorityClassName: datadog-priority-class
+    env:
+      - name: DD_KUBERNETES_APISERVER_CLIENT_TIMEOUT
+        value : 120
+      - name: DD_CLC_RUNNER_ENABLED
+        value: "true"
+      - name: DD_CLC_RUNNER_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+    resources:
+      requests:
+        cpu: 1500m
+        memory: 2048Mi
+      limits:
+        cpu: 3000m
+        memory: 4096Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-pyqt
+      manawa/environment: prod

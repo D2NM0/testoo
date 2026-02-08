@@ -1,0 +1,5 @@
+apiVersion: v2
+name: obs-dcgm-exporter
+description: DCGM exporter
+type: application
+version: 0.1.0

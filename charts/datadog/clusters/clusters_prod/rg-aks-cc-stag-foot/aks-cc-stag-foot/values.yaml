@@ -1,0 +1,40 @@
+global:
+  cloud_provider: aks
+datadog:
+  datadog:
+    clusterName: aks-cc-stag-foot
+    tags: [manawa-cluster:aks-cc-stag-foot, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+    kubeStateMetricsEnabled: false
+    kubeStateMetricsNetworkPolicy:
+      create: false
+    kubeStateMetricsCore:
+      enabled: true
+    kubelet:
+      tlsVerify: false
+  agents:
+    podLabels:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-cc-stag-foot
+      manawa/environment: prod

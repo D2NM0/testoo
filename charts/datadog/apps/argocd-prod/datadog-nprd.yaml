@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog-nprd-as
+  namespace: tp-datadog
+spec:
+  destination:
+    namespace: tp-datadog
+    name: gke-cc-prod-tool
+  project: datadog
+  source:
+    path: charts/datadog/applicationsets/argocd_nprd/
+    repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+    targetRevision: main
+    directory:
+      recurse: false

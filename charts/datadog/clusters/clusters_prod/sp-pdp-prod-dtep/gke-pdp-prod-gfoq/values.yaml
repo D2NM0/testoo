@@ -1,0 +1,40 @@
+datadog:
+  datadog:
+    clusterName: gke-pdp-prod-gfoq
+    tags: [manawa-cluster:gke-pdp-prod-gfoq, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    containers:
+      agent:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1024Mi
+          limits:
+            cpu: 2000m
+            memory: 4096Mi
+    podLabels:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-pdp-prod-gfoq
+      manawa/environment: prod

@@ -1,0 +1,35 @@
+global:
+  cloud_provider: aks
+datadog:
+  datadog:
+    clusterName: aks-mutu-prod-ggsu
+    tags: [manawa-cluster:aks-mutu-prod-ggsu, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+    kubelet:
+      tlsVerify: false
+  agents:
+    podLabels:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-mutu-prod-ggsu
+      manawa/environment: prod

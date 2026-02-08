@@ -1,0 +1,33 @@
+global:
+  cloud_provider: gke
+datadog:
+  datadog:
+    clusterName: gke-eod-dev-opal
+    tags: [manawa-cluster:gke-eod-dev-opal, managed_by:observability_team, cluster_slo:true, obs-env:dev]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-eod-dev-opal
+      manawa/environment: dev

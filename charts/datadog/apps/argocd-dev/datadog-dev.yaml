@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog-dev-as
+  namespace: tp-datadog
+spec:
+  destination:
+    namespace: tp-datadog
+    name: gke-cc-dev-tool
+  project: datadog
+  source:
+    path: charts/datadog/applicationsets/argocd_dev
+    repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+    targetRevision: dev
+    directory:
+      recurse: false

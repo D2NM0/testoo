@@ -1,0 +1,75 @@
+# Exporter values documented on nvidia's repo: https://github.com/NVIDIA/dcgm-exporter/blob/main/deployment/values.yaml
+
+# Only deploy on GPU nodes
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: cloud.google.com/gke-accelerator
+          operator: Exists 
+
+# Use prometheus exporter to expose to Datadog
+podAnnotations:
+  ad.datadoghq.com/exporter.checks: |
+    {
+      "openmetrics": {
+        "init_config": {},
+        "instances": [
+          {
+            "prometheus_url": "http://%%host%%:9400/metrics",
+            "namespace": "",
+            "metrics": ["*"],
+            "send_distribution_counts_as_monotonic": "true",
+            "send_histograms_buckets": "true",
+            "send_monotonic_counter": "true"
+          }
+        ]
+      }
+    }
+
+# Set namespace
+namespaceOverride: obs-dcgm-exporter
+
+# Extra volumes containing libs and binaries
+extraConfigMapVolumes:
+  - name: exporter-metrics-volume
+    configMap:
+      name: exporter-metrics-config-map
+      items:
+      - key: metrics
+        path: default-counters.csv
+
+extraHostVolumes:
+  - name: nvidia-install-dir-host
+    hostPath: /home/kubernetes/bin/nvidia
+  - name: nvidia-config
+    hostPath: /etc/nvidia
+
+
+extraVolumeMounts:
+  - name: nvidia-install-dir-host
+    mountPath: /usr/local/nvidia
+    readOnly: true
+  - mountPath: /etc/nvidia
+    name: nvidia-config
+    readOnly: true
+  - name: exporter-metrics-volume
+    mountPath: /etc/dcgm-exporter/default-counters.csv
+    subPath: default-counters.csv
+
+# Toleration to be able to deploy on GPU nodes
+tolerations:
+- effect: NoSchedule
+  key: nvidia.com/gpu
+  operator: Equal
+  value: present
+
+serviceMonitor:
+  enabled: false
+
+kubeletPath: /var/lib/kubelet/pod-resources
+
+# Sadly necessary 
+securityContext:
+  privileged: true

@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-ittm-nprd-iron
+    tags: [manawa-cluster:gke-ittm-nprd-iron, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-ittm-nprd-iron
+      manawa/environment: prep

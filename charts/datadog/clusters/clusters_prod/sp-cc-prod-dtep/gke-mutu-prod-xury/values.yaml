@@ -1,0 +1,38 @@
+datadog:
+  datadog:
+    clusterName: gke-mutu-prod-xury
+    tags: [manawa-cluster:gke-mutu-prod-xury, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  clusterAgent:
+    enabled: true
+    metricsProvider:
+      enabled: true
+      # clusterAgent.metricsProvider.useDatadogMetrics
+      # Enable usage of DatadogMetric CRD to autoscale on arbitrary Datadog queries
+      useDatadogMetrics: true
+      pocdm: true
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-prod-xury
+      manawa/environment: prod

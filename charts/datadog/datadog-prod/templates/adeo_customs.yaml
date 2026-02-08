@@ -1,0 +1,235 @@
+
+# This is mainly for Kong.
+# They cannot use an environment variable in their configuration so we expose a service that they can send data to.
+{{- if .Values.datadog.datadog.otlp }}
+{{- if .Values.datadog.datadog.otlp.receiver }}
+{{- if .Values.datadog.datadog.otlp.receiver.protocols }}
+{{- with .Values.datadog.datadog.otlp.receiver.protocols }}
+
+{{- if (and .grpc .grpc.enabled) }}
+{{- include "verify-otlp-grpc-endpoint-prefix" .grpc.endpoint }}
+{{- include "verify-otlp-endpoint-port" .grpc.endpoint }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: otlp-grpc
+  namespace: datadog-agent
+spec:
+  ports:
+  - port: {{ .grpc.endpoint | regexFind ":[0-9]+$" | trimPrefix ":" }}
+    protocol: TCP
+    targetPort: {{ .grpc.endpoint | regexFind ":[0-9]+$" | trimPrefix ":" }}
+  selector:
+    app: datadog
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+# This is mainly for Kong.
+# They cannot use an environment variable in their configuration so we expose a service that they can send data to.
+{{- if .Values.datadog.datadog.otlp }}
+{{- if .Values.datadog.datadog.otlp.receiver }}
+{{- if .Values.datadog.datadog.otlp.receiver.protocols }}
+{{- with .Values.datadog.datadog.otlp.receiver.protocols }}
+
+{{- if (and .http .http.enabled) }}
+{{- include "verify-otlp-endpoint-port" .http.endpoint }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: otlp-http
+  namespace: datadog-agent
+spec:
+  ports:
+  - port: {{ .http.endpoint | regexFind ":[0-9]+$" | trimPrefix ":" }}
+    protocol: TCP
+    targetPort: {{ .http.endpoint | regexFind ":[0-9]+$" | trimPrefix ":" }}
+  selector:
+    app: datadog
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if not .Values.datadog.nosealedsecret }}
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: datadog-cluster-agent
+  namespace: datadog-agent
+spec:
+  encryptedData:
+    token: AgBPC5qg46CtDjo2EAq8mqn7KqJAMuiro1SA/I9N6y7IdcSJ2XuWfDwXuZCKIwa+Y84IaeFZDlTL8RBucu2hSSjF4d405N4cYiuJx83x7P/+1L7jMFcOUMuGMWfzbYSGW4QIleru3l1uvbZZkGYTk0yCzV4c7Ura2A9pOgiUSDdudAujL4cIE+2PWsJEfDXWFHvRrhvOyVbNV9VT/iclbM1l0kGkbQZk2eI/YBmRiGRVa62vqyHXLYd0v8TtW58z17jVkQ0pAG7sFytUcDras3jiZmCMgG/cvkzyaM9seo80CwMDyIomPn0e7iXiJWMru35T0YEvtJT3VFCsCyrduSkh8NlYALyBor+qI9J1SJUDGgEL6h1Eo/Ol2B+WXgQZTJCCjvcgrFzKq0dCMP5KN9TGEDGUj5jUBudzzddGBonFe9r64Pf4weim5UJwKOAHfwa2KLcqWMiq9ptwJYZwQq4f8C6NJV0FyruamYevEd73/pLP3XgFGYAIqRPTnjJ0b0Z3vsagvkMpQtwsldwuJrmYhutjo1Kz/UMQIgDuer+dzPa62drtZQsMvfP/upa68xyxF+hBeGA+tvvPTWCpXzKBUMGDM4CsIRV/fU1KlpTgyG64m7tUAboc6iQ8tA+2EfqUtwLRVFxsxhoasnGNadLZ/jIm9XHW7STWkXrRjPl+BfXh+d+ToBjA0GvNFSIPlvBwwwpBIGkxSU3OFVK/dSGr2BUYoKMz86Zl3zrzyYKF+g==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: datadog-cluster-agent
+      namespace: datadog-agent
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: datadog-secret
+  namespace: datadog-agent
+spec:
+  encryptedData:
+    api-key: AgBlYN1luHLFiFX3D74Mz+r/mPtvod/c6oFf62yDYAnhRD5W9k/VfPiodFHetRt9XsYAZrNkoUyX5pcBX08QD8VxXiWyOAgURelpPuntp2cEJDItDmzxvsPQytS1ySgEMMXaYfEA75BBZZpX4R6H9k3RzqxGqvunccTEaX6JnJN40XpcT0KhuF+3q15gOaGO10CpVooDmRsnjoFRDw9qcJHHo9MmIjYWlvBWSZ5rqEYgI3vCZQ7QtDbde6BogZuhHbxf3Ap1Uuc49uTAtJeDAuMskAZXY+rc9KfwxGe5UOT5pMSL0k6ZhF6XsOXOADWlwpNLvW6Q+6wwRZzLCJP3jMlcgxWkVCJUF80XlVGOMGh+3BVRI9A9HFec3+xyy8oIbaIQudLPnzL1Pxm8P6WgeCnzJDpEB9Pq1IMNwltdy8ujUlovuhBsQEIELiy2mRAhnsLVYhr/uxOrQpLdea5cVPPzb4pKnMgpSLBTo/cuehOUhatg5D/52v6WjXQsdLummYxS0p12huWj+E7ZIc0ucrJMJKoQOxRZLcQRJhVuqRmnDx3z1HWEuUPfAt4CRi9OGqQBFn2j5PB9dwQp8i+T6cnn1RMmxsk/06pi5S6rYbv8CmEh4UIQ0CShEkBoMW5lUsV0ucy165ntf1gKeejZZEoubK1X408zOV5aPVQL8EaJH4gY9fs8tEl+j+TpF2rS4ibEuFtFXVE7dLCDH1E646AaeliG3e1dTJKDbTArdMgMTA==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: datadog-secret
+      namespace: datadog-agent
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: datadog-appkey
+  namespace: datadog-agent
+spec:
+  encryptedData:
+    app-key: AgBRbyHIyYsrmImIVOZwlYz+y3Me+5bS69S+wQFYO4bgWiz6N/z9G0wgZ4Xj+DZ9JwLoZnfuEOgxasaVVLUfD8eidKwEER5XZOEP5KIZTW41/hznMd/63N1paOAtLG3XYPhAiMuXL3N9V5t0w/fkTJOSOxumM+sclN3C1ZaZIPvndqfnGOisgLctUHbfH0pxIlBHvqLD3etTM28zXWlGZtHB9BZRfdRIp5TaVeXgkcyAmf7LFuHW0L2LaGpJCq+2eL2U83zsF8pD7OKFHJ7VWyfEv3FR8JA12gAYZ99jgWSOUOatg9QKoVVLArlQULinsq0mM/o+n758mknQL1PtlhMRHC/jk5U6DdmBCL92CMJlbHwIFPRalEAVpSfGLVptv9ds8B5vKcpyT7RrGBCd4y0sSxQLNZFhplU8qlomeILL4/Uds/kHp5oHDDvs5x7VMMmhqVGJxjLnvTHB0lK+Li5i7QRtrDAB2QvFCs7nNnz8qohrROkEyWRVlXeE+a8NDUmj2T6CTKqtc0jOcKhjfiMx1eI+SSDrF+cVVZ6JQmRQsq4gYpyL/9gRJgXyNkMLMFvbfJp3In6+VebslJy9KE+hiyIdKwzwdpbhBTDMxPD3Sq56U9Ct1FzaJPMokV3YtzhraIErZ+U8R/YKbBKaU6tKK1FwNqlFiN02gYHf0k6p9nAfvWFZy7D2xyRvvK3Soko79uYvaE/fevWn2N63cqb1q1EJ5x18NGqHg4UEG6H/gaYgHmXH+9BP
+  template:
+    metadata:
+      creationTimestamp: null
+      name: datadog-appkey
+      namespace: datadog-agent
+{{- end }}
+---
+{{- if .Values.datadog.apmtraceportforward }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: apm-trace-port-forward
+  namespace: datadog-agent
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - pods/portforward
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+- apiGroups:
+  - '*'
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+{{- end }}
+---
+{{- if .Values.datadog.apmtraceportforward }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ccdp-dev
+  namespace: datadog-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: apm-trace-port-forward
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: cdp-all-people@adeo.com
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trace-svc
+  namespace: datadog-agent
+spec:
+  ports:
+  - port: 8126
+    protocol: TCP
+    targetPort: 8126
+  selector:
+    app: datadog
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: datadog-priority-class
+value: 1000000000
+globalDefault: false
+description: "Datadog high priority"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: obsrolebinding
+  namespace: datadog-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tenant-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: GR_d2579b78ad7f4082acd6813c74420faa_ThirdParty_aCJp8mQ5RMi6KrKK@adeo.com
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: daemonset-manager
+  namespace: datadog-agent
+rules:
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: daemonset-manager-binding
+  namespace: datadog-agent
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: GR_d2579b78ad7f4082acd6813c74420faa_ThirdParty_aCJp8mQ5RMi6KrKK@adeo.com
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: daemonset-manager
+---
+{{- if .Values.global }}
+{{- if eq .Values.global.cloud_provider "aks" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datadog-deploy-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tenant-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: 2404e108-4440-4270-896c-ca6a5217455b
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datadog-ns-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tenant-namespace-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: 2404e108-4440-4270-896c-ca6a5217455b
+---
+{{- end }}
+{{- end }}

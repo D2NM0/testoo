@@ -1,0 +1,57 @@
+name: Release Alternate Agent Version
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_REGISTRY: adeo-docker-asfr-gtdp-observability-release
+  CI_VAULT_NAMESPACE: "adeo/observability"
+  CI_VAULT_PATH: "ci/OBS-HelmDatadog"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: 'Setup yq'
+        uses: dcarbone/install-yq-action@v1.3.0
+      - name: Get agent version from Yaml
+        id: get_agent_version
+        run: |
+          CLUSTER_AGENT_IMAGE_TAG=$(yq e '.datadog.clusterAgent.image.tag' charts/datadog/values.yaml)
+          echo "CLUSTER_AGENT_IMAGE_TAG=${CLUSTER_AGENT_IMAGE_TAG}" >> $GITHUB_ENV
+      - name: Create Dockerfile
+        run: |
+          echo "FROM gcr.io/datadoghq/agent:${{ env.CLUSTER_AGENT_IMAGE_TAG }}-jmx" > Dockerfile
+          echo "RUN agent integration install -r -t datadog-upbound-uxp==1.0.0" >> Dockerfile
+      - name: 🔐 Import secrets from Vault
+        uses: adeo/vault-action@v1
+        with:
+          vault-namespace: ${{ env.CI_VAULT_NAMESPACE }}
+          vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
+          vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
+          vault-secrets: |
+            secret/data/${{ env.CI_VAULT_PATH }} JFROG_TOKEN | JFROG_TOKEN;
+            secret/data/${{ env.CI_VAULT_PATH }} JFROG_USER | JFROG_USER;
+      - name: Set up QEMU 🏗️
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx 🐋
+        uses: docker/setup-buildx-action@v1
+      - name: Login to JFrog 🐸
+        uses: docker/login-action@v1
+        with:
+          registry: "${{ env.DOCKER_REGISTRY }}.jfrog.io"
+          username: ${{ env.JFROG_USER }}
+          password: ${{ env.JFROG_TOKEN }}
+      - name: Build and push 🐳
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: "${{ env.DOCKER_REGISTRY }}.jfrog.io/datadog/agent-upbound:${{ env.CLUSTER_AGENT_IMAGE_TAG }}-jmx"

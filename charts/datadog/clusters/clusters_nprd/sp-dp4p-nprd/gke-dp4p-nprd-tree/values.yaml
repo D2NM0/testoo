@@ -1,0 +1,47 @@
+datadog:
+  datadog:
+    clusterName: gke-dp4p-nprd-tree
+    tags: [manawa-cluster:gke-dp4p-nprd-tree, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  clusterChecksRunner:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 500Mi
+      limits:
+        cpu: 1000m
+        memory: 2048Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+  agents:
+    containers:
+      agent:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1024Mi
+          limits:
+            cpu: 2000m
+            memory: 4096Mi
+    podLabels:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dp4p-nprd-tree
+      manawa/environment: prep

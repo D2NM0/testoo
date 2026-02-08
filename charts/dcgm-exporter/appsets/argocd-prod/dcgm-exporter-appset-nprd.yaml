@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: obs-appset-dcgm-exporter-nprd
+  namespace: tp-dcgm-exporter
+spec:
+  # This option allows to remove the autosync on an app. It ignores the syncPolicy on applications generated.
+  ignoreApplicationDifferences:
+    - jsonPointers:
+      - /spec/syncPolicy
+  goTemplate: true
+  generators:
+  - clusters:
+      selector:
+        matchExpressions:
+          - { key: "obs-dcgm-exporter/enabled", operator: In, values: ["true"] }
+          - { key: "manawa/cc_env", operator: In, values: [nprd] }
+  template:
+    metadata:
+      name: '{{.name}}-dcgm-exporter'
+      annotations: 
+        argocd.argoproj.io/compare-options: "ServerSideDiff=true" 
+    spec:
+      destination:
+        namespace: obs-dcgm-exporter
+        name: '{{.name}}'
+      project: dcgm-exporter
+      sources:
+      - helm:
+          valueFiles:
+          - $values/charts/dcgm-exporter/values.yaml
+        repoURL: https://nvidia.github.io/dcgm-exporter/helm-charts
+        chart: dcgm-exporter
+        targetRevision: 4.0.4
+      - repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+        targetRevision: main
+        path: charts/dcgm-exporter
+        helm:
+          values: |
+            cluster_name: "{{ .name }}"
+            env: nprd 
+      - repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+        ref: values 
+        targetRevision: main
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - ApplyOutOfSyncOnly=true
+        - RespectIgnoreDifferences=true
+        - Validate=true
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+

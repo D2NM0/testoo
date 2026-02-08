@@ -1,0 +1,33 @@
+global:
+  cloud_provider: gke
+datadog:
+  datadog:
+    clusterName: gke-mesh-dev-moon
+    tags: [manawa-cluster:gke-mesh-dev-moon, managed_by:observability_team, cluster_slo:true]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: gke-mesh-dev-moon
+      manawa/environment: dev

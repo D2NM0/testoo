@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: datadog-nprd-as
+  namespace: tp-datadog
+spec:
+  generators:
+  - git:
+      repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+      revision: main
+      directories:
+      - path: charts/datadog/clusters/clusters_nprd/*/*  
+  template:
+    metadata:
+      name: '{{path[4]}}--{{path.basename}}-datadog'
+    spec:
+      project: datadog
+      source:
+        repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+        targetRevision: main
+        path: charts/datadog/datadog-nprd
+        helm:
+          valueFiles:
+          - 'values.yaml'
+          - '../../../{{path}}/values.yaml'
+      destination:
+        name: '{{path.basename}}'
+        namespace: datadog-agent
+      syncPolicy: {}

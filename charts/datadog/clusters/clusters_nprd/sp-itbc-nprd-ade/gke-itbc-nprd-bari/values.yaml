@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-itbc-nprd-bari
+    tags: [manawa-cluster:gke-itbc-nprd-bari, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-itbc-nprd-bari
+      manawa/environment: prep

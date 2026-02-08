@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-scdp-nprd-tyjo
+    tags: [manawa-cluster:gke-scdp-nprd-tyjo, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-nprd-tyjo
+      manawa/environment: prep

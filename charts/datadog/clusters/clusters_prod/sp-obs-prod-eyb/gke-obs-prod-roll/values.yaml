@@ -1,0 +1,39 @@
+datadog:
+  global:
+    cloud_provider: gke
+  datadog:
+    clusterName: gke-obs-prod-roll
+    tags: [manawa-cluster:gke-obs-prod-roll, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    tolerations:
+      - operator: "Exists"
+        effect: "NoSchedule"
+      - operator: "Exists"
+        effect: "NoExecute"
+    podLabels:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+  clusterChecksRunner:
+    replicas: 25
+    deploymentAnnotations:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-obs-prod-roll
+      manawa/environment: prod

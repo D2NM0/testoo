@@ -1,0 +1,33 @@
+global:
+  cloud_provider: gke
+datadog:
+  datadog:
+    clusterName: gke-ghr-prod-csgo
+    tags: [manawa-cluster:gke-ghr-prod-csgo, managed_by:observability_team, cluster_slo:true, obs-env:main]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-ghr-prod-csgo
+      manawa/environment: prod

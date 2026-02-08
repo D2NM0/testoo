@@ -1,0 +1,40 @@
+global:
+  cloud_provider: aks
+datadog:
+  datadog:
+    clusterName: aks-cc-dev-rcl
+    tags: [manawa-cluster:aks-cc-dev-rcl, managed_by:observability_team, cluster_slo:true, obs-env:dev]
+    kubeStateMetricsEnabled: false
+    kubeStateMetricsNetworkPolicy:
+      create: false
+    kubeStateMetricsCore:
+      enabled: true
+    kubelet:
+      tlsVerify: false
+  agents:
+    podLabels:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+    podAnnotations:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev
+    additionalLabels:
+      manawa/cluster_name: aks-cc-dev-rcl
+      manawa/environment: dev

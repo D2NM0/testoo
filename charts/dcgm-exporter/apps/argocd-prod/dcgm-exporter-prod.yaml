@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: obs-dcgm-exporter-dev
+  namespace: tp-dcgm-exporter
+spec:
+  destination:
+    namespace: tp-dcgm-exporter
+    name: gke-cc-prod-tool
+  project: dcgm-exporter
+  source:
+    path: charts/dcgm-exporter/appsets/argocd-prod
+    repoURL: git@github.com:adeo/OBS-HelmDatadog.git
+    targetRevision: main
+    directory:
+      recurse: false

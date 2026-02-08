@@ -1,0 +1,41 @@
+global:
+  cloud_provider: aks
+datadog:
+  datadog:
+    clusterName: aks-ccdp-prod-ralb
+    tags: [manawa-cluster:aks-ccdp-prod-ralb, platform:ccdp, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+    kubelet:
+      tlsVerify: false
+  clusterAgent:
+    env:
+      - name: "DD_ADMISSION_CONTROLLER_ADD_AKS_SELECTORS"
+        value: "true"
+    deploymentAnnotations:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+  providers:
+    aks:
+      enabled: true
+  agents:
+    podLabels:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-ccdp-prod-ralb
+      manawa/environment: prod

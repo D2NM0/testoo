@@ -1,0 +1,46 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: "Get latest tag"
+        id: get_latest_tag
+        run: |
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "::set-output name=latest_tag::$LATEST_TAG"
+
+      - name: "Parse version"
+        id: parse_version
+        run: |
+          TAG=${{ steps.get_latest_tag.outputs.latest_tag }}
+          IFS='.' read -r -a VERSION_PARTS <<< "$TAG"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          echo "::set-output name=major::$MAJOR"
+          echo "::set-output name=minor::$MINOR"
+          echo "::set-output name=patch::$((PATCH + 1))"
+
+      - name: "Create new tag"
+        id: create_tag
+        run: |
+          NEW_TAG="${{ steps.parse_version.outputs.major }}.${{ steps.parse_version.outputs.minor }}.${{ steps.parse_version.outputs.patch }}"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+

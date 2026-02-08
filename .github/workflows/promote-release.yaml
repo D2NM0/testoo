@@ -1,0 +1,41 @@
+name: "Promote dev version to nprd/prod"
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  promote:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Promote dev version to nprd
+        if: startsWith(github.head_ref, 'dependatbot')
+        run: |
+          DEV_VER=$(yq '.dependencies[].version' charts/datadog/datadog-dev/Chart.yaml)
+          yq -i ".dependencies[].version = \"$DEV_VER\"" charts/datadog/datadog-nprd/Chart.yaml
+          echo "target=nprd" >> $GITHUB_ENV
+          echo "version=$DEV_VER" >> $GITHUB_ENV
+
+      - name: Promote nprd version to prod
+        if: startsWith(github.head_ref, 'chore/promote-release')
+        run: |
+          NPRD_VER=$(yq '.dependencies[].version' charts/datadog/datadog-nprd/Chart.yaml)
+          yq -i ".dependencies[].version = \"$NPRD_VER\"" charts/datadog/datadog-prod/Chart.yaml
+          echo "target=prod" >> $GITHUB_ENV
+          echo "version=$NPRD_VER" >> $GITHUB_ENV
+
+      - name: Create Promotion PR
+        if: env.target != ''
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.ORG_GITHUB_TOKEN_SHARED_REPO }}
+          title: "Sync ${{ env.target }} version to ${{ env.version }}"
+          branch: "chore/promote-release-${{ env.target }}-${{ env.version }}"
+          author: 'github-actions <github-actions@users.noreply.github.com>'
+          body: "Automated Sync to ${{ env.target }} following merge of previous environment."

@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-dxp-nprd-lynx
+    tags: [manawa-cluster:gke-dxp-nprd-lynx, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-dxp-nprd-lynx
+      manawa/environment: prep

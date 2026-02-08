@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+    manawa/bu_index: "15"
+    manawa/cluster_name:  {{ .Values.cluster_name }}
+    manawa/environment: {{ .Values.env }}
+    manawa/product_id: 2606f0c1-477b-4f83-b275-0dc81954de2e
+  labels:
+    manawa/bu_index: "15"
+    manawa/cluster_name: {{ .Values.cluster_name }}
+    manawa/environment: {{ .Values.env }}
+    manawa/product_id: 2606f0c1-477b-4f83-b275-0dc81954de2e
+  name: "obs-dcgm-exporter"

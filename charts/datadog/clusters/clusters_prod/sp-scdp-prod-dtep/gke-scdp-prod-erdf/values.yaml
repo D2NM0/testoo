@@ -1,0 +1,31 @@
+datadog:
+  datadog:
+    clusterName: gke-scdp-prod-erdf
+    tags: [manawa-cluster:gke-scdp-prod-erdf, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+  agents:
+    podLabels:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: gke-scdp-prod-erdf
+      manawa/environment: prod

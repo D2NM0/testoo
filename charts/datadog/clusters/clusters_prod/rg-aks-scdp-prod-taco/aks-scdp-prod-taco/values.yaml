@@ -1,0 +1,40 @@
+global:
+  cloud_provider: aks
+datadog:
+  datadog:
+    clusterName: aks-scdp-prod-taco
+    tags: [manawa-cluster:aks-scdp-prod-taco, managed_by:observability_team, cluster_slo:true, obs-env:prod]
+    kubeStateMetricsEnabled: false
+    kubeStateMetricsNetworkPolicy:
+      create: false
+    kubeStateMetricsCore:
+      enabled: true
+    kubelet:
+      tlsVerify: false
+  agents:
+    podLabels:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+  clusterChecksRunner:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+  clusterAgent:
+    deploymentAnnotations:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+    podAnnotations:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod
+    additionalLabels:
+      manawa/cluster_name: aks-scdp-prod-taco
+      manawa/environment: prod

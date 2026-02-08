@@ -1,0 +1,141 @@
+datadog:
+  datadog:
+    clusterName: gke-mutu-nprd-mxiq
+    tags: [manawa-cluster:gke-mutu-nprd-mxiq, managed_by:observability_team, cluster_slo:true, obs-env:nprd]
+    #secretBackend:
+    #  command: "/readsecret_multiple_providers.sh"
+    # logLevel: DEBUG
+    otlp:
+      receiver:
+        protocols:
+          # datadog.otlp.receiver.protocols.grpc - OTLP/gRPC configuration
+          grpc:
+            # datadog.otlp.receiver.protocols.grpc.enabled -- Enable the OTLP/gRPC endpoint
+            enabled: true
+            # datadog.otlp.receiver.procotols.grpc.endpoint -- OTLP/gRPC endpoint
+            endpoint: "0.0.0.0:4317"
+          # datadog.otlp.receiver.protocols.http - OTLP/HTTP configuration
+          http:
+            # datadog.otlp.receiver.protocols.http.enabled -- Enable the OTLP/HTTP endpoint
+            enabled: true
+            # datadog.otlp.receiver.protocols.http.endpoint -- OTLP/HTTP endpoint
+            endpoint: "0.0.0.0:4318"
+  clusterAgent:
+    priorityClassName: datadog-priority-class
+    env:
+      - { name: DD_EXTERNAL_METRICS_PROVIDER_MAX_AGE, value: "900" }
+      - { name: DD_EXTERNAL_METRICS_PROVIDER_BUCKET_SIZE, value: "900" }
+      - { name: DD_LOG_FORMAT_JSON, value: "true" }
+      - { name: DD_KUBERNETES_APISERVER_CLIENT_TIMEOUT, value: "60" }
+      - { name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED, value: "true" }
+      - { name: DD_ADMISSION_CONTROLLER_AUTO_INSTRUMENTATION_INIT_RESOURCES_CPU, value: "500m" }
+      - { name: DD_ADMISSION_CONTROLLER_AUTO_INSTRUMENTATION_INIT_RESOURCES_MEMORY, value: "1024Mi" }
+    metricsProvider:
+      enabled: true
+      # clusterAgent.metricsProvider.useDatadogMetrics
+      # Enable usage of DatadogMetric CRD to autoscale on arbitrary Datadog queries
+      useDatadogMetrics: true
+      pocdm: true
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 3072Mi
+      limits:
+        cpu: 4000m
+        memory: 6144Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+
+  clusterChecksRunner:
+    replicas: 2 
+    priorityClassName: datadog-priority-class
+    env:
+      - name: DD_KUBERNETES_APISERVER_CLIENT_TIMEOUT
+        value : 120
+      - name: DD_CLC_RUNNER_ENABLED
+        value: "true"
+      - name: DD_CLC_RUNNER_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 3072Mi
+      limits:
+        cpu: 4000m
+        memory: 6144Mi
+    deploymentAnnotations:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+    additionalLabels:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+
+  agents:
+    priorityClassName: datadog-priority-class
+    containers:
+      agent:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+      processAgent:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+      traceAgent:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+      systemProbe:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+      securityAgent:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+      initContainers:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 2048Mi
+    podLabels:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
+    podAnnotations:
+      manawa/cluster_name: gke-mutu-nprd-mxiq
+      manawa/environment: prep
