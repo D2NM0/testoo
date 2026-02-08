@@ -3,7 +3,7 @@ name: Check Datadog Chart Version & Create Change
 on:
   push:
     paths:
-      - 'charts/datadog-*/Chart.yaml'
+      - 'charts/datadog-dev/Chart.yaml'
 
 jobs:
   check-version-change:
