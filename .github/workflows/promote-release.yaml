@@ -15,7 +15,7 @@ jobs:
           ref: main
 
       - name: Promote dev version to nprd
-        if: startsWith(github.head_ref, 'dependatbot')
+        if: startsWith(github.event.pull_request.head.ref, 'dependatbot')
         run: |
           DEV_VER=$(yq '.dependencies[].version' charts/datadog/datadog-dev/Chart.yaml)
           yq -i ".dependencies[].version = \"$DEV_VER\"" charts/datadog/datadog-nprd/Chart.yaml
@@ -23,7 +23,7 @@ jobs:
           echo "version=$DEV_VER" >> $GITHUB_ENV
 
       - name: Promote nprd version to prod
-        if: startsWith(github.head_ref, 'chore/promote-release')
+        if: startsWith(github.event.pull_request.head.ref, 'chore/promote-release')
         run: |
           NPRD_VER=$(yq '.dependencies[].version' charts/datadog/datadog-nprd/Chart.yaml)
           yq -i ".dependencies[].version = \"$NPRD_VER\"" charts/datadog/datadog-prod/Chart.yaml
