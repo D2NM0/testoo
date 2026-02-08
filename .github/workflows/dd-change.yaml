@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'charts/datadog-*/Chart.yaml'
+      - 'charts/datadog/datadog-*/Chart.yaml'
 
 jobs:
   check-version-change:
