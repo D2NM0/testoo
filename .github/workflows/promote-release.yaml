@@ -20,7 +20,7 @@ jobs:
 
 
       - name: Promote dev version to nprd
-        if: startsWith(github.event.pull_request.head.ref, 'dependatbot')
+        if: startsWith(github.event.pull_request.head.ref, 'dependabot/helm')
         run: |
           DEV_VER=$(yq '.dependencies[].version' charts/datadog/datadog-dev/Chart.yaml)
           yq -i ".dependencies[].version = \"$DEV_VER\"" charts/datadog/datadog-nprd/Chart.yaml
