@@ -34,7 +34,7 @@ jobs:
         if: env.target != ''
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.ORG_GITHUB_TOKEN_SHARED_REPO }}
+          token: ${{ secrets.PAT }}
           title: "Sync ${{ env.target }} version to ${{ env.version }}"
           branch: "chore/promote-release-${{ env.target }}-${{ env.version }}"
           author: 'github-actions <github-actions@users.noreply.github.com>'
