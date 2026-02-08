@@ -21,7 +21,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Compare Datadog dependency versions
         id: compare
         shell: bash
@@ -29,24 +28,33 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
 
-          BEFORE_SHA="${{ github.event.before }}"
           CHANGED=false
           CHANGES="{}"
 
-          for chart in charts/datadog-*/Chart.yaml; do
+          # Get only Chart.yaml files changed in this push
+          mapfile -t CHANGED_CHARTS < <(
+            git diff --name-only ${{ github.event.before }} ${{ github.sha }} \
+              | grep '^charts/datadog-.*/Chart.yaml$' || true
+          )
+
+          if [[ ${#CHANGED_CHARTS[@]} -eq 0 ]]; then
+            echo "No Datadog Chart.yaml files changed"
+          fi
+
+          for chart in "${CHANGED_CHARTS[@]}"; do
             env=$(basename "$(dirname "$chart")" | sed 's/datadog-//')
 
-            CURRENT_VERSION=$(yq e '
+            CURRENT_VERSION=$(yq e -r '
               .dependencies[] | select(.name == "datadog") | .version
-            ' "$chart")
+            ' "$chart" | tr -d '[:space:]')
 
-            if git cat-file -e "$BEFORE_SHA:$chart" 2>/dev/null; then
-              OLD_VERSION=$(git show "$BEFORE_SHA:$chart" | yq e '
-                .dependencies[] | select(.name == "datadog") | .version
-              ' -)
-            else
-              OLD_VERSION=""
-            fi
+            OLD_VERSION=$(git show "${{ github.event.before }}:$chart" 2>/dev/null \
+              | yq e -r '
+                  .dependencies[] | select(.name == "datadog") | .version
+                ' - \
+              | tr -d '[:space:]' || true)
+
+            echo "[$env] old=$OLD_VERSION new=$CURRENT_VERSION"
 
             if [[ "$CURRENT_VERSION" != "$OLD_VERSION" ]]; then
               CHANGED=true
@@ -61,6 +69,7 @@ jobs:
 
           echo "version-changed=$CHANGED" >> "$GITHUB_OUTPUT"
           echo "changes=$CHANGES" >> "$GITHUB_OUTPUT"
+
 
 
       - name: Debug output
