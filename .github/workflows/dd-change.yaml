@@ -22,23 +22,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compare chart versions
+      - name: Compare Datadog dependency versions
         id: compare
         shell: bash
         run: |
           set -euo pipefail
+          shopt -s nullglob
 
           BEFORE_SHA="${{ github.event.before }}"
           CHANGED=false
           CHANGES="{}"
 
-          for chart in charts/datadog/datadog-*/Chart.yaml; do
+          for chart in charts/datadog-*/Chart.yaml; do
             env=$(basename "$(dirname "$chart")" | sed 's/datadog-//')
 
-            CURRENT_VERSION=$(yq e '.version' "$chart")
+            CURRENT_VERSION=$(yq e '
+              .dependencies[] | select(.name == "datadog") | .version
+            ' "$chart")
 
             if git cat-file -e "$BEFORE_SHA:$chart" 2>/dev/null; then
-              OLD_VERSION=$(git show "$BEFORE_SHA:$chart" | yq e '.version' -)
+              OLD_VERSION=$(git show "$BEFORE_SHA:$chart" | yq e '
+                .dependencies[] | select(.name == "datadog") | .version
+              ' -)
             else
               OLD_VERSION=""
             fi
@@ -56,6 +61,7 @@ jobs:
 
           echo "version-changed=$CHANGED" >> "$GITHUB_OUTPUT"
           echo "changes=$CHANGES" >> "$GITHUB_OUTPUT"
+
 
       - name: Debug output
         run: |
