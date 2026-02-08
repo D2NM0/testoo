@@ -4,4 +4,4 @@ updates:
     directory: "charts/datadog/datadog-dev"  
     target-branch: "main"
     schedule:
-      interval: "monthly"
+      interval: "daily"
