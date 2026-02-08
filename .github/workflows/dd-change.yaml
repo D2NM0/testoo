@@ -1,67 +1,58 @@
-  name: Check Datadog Chart Version & Create Change
+name: Debug Datadog dependency version
 
-  on:
-    push:
-      branches:
-        - main
-      paths:
-        - 'charts/datadog/datadog-*/Chart.yaml'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'charts/datadog/datadog-*/Chart.yaml'
 
-  jobs:
-    check-version-change:
-      name: Check if Datadog Chart version changed
-      runs-on: ubuntu-latest
-      outputs:
-        version-changed: ${{ steps.set-output.outputs.version-changed }}
-        new-version: ${{ steps.set-output.outputs.new-version }}
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
+jobs:
+  debug:
+    runs-on: ubuntu-latest
 
-        - name: Get previous commit
-          id: git-previous
-          run: |
-            echo "PREV_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-        - name: Read current versions
-          id: read-current
-          run: |
-            for file in charts/datadog/datadog-*/Chart.yaml; do
-              ver=$(yq e '.version' "$file")
-              echo "$file current version: $ver"
-              echo "$file=$ver" >> versions.txt
-            done
+      - name: Print CURRENT dependency versions
+        run: |
+          shopt -s nullglob
+          echo "CURRENT versions:"
+          for file in charts/datadog/datadog-*/Chart.yaml; do
+            echo "File: $file"
+            yq e '.dependencies[0].version' "$file"
+          done
 
-        - name: Read previous versions
-          id: read-previous
-          run: |
-            git show $PREV_COMMIT:charts/datadog/datadog-dev/Chart.yaml > old-dev.yaml || true
-            git show $PREV_COMMIT:charts/datadog/datadog-nprd/Chart.yaml > old-nprd.yaml || true
-            git show $PREV_COMMIT:charts/datadog/datadog-prod/Chart.yaml > old-prod.yaml || true
-            for file in old-*.yaml; do
-              ver=$(yq e '.version' "$file")
-              echo "$file old version: $ver"
-              echo "$file=$ver" >> old_versions.txt
-            done
+      - name: Print PREVIOUS dependency versions
+        run: |
+          shopt -s nullglob
+          echo "PREVIOUS versions:"
+          for file in charts/datadog/datadog-*/Chart.yaml; do
+            echo "File: $file"
+            git show ${{ github.event.before }}:$file 2>/dev/null \
+              | yq e '.dependencies[0].version' - \
+              || echo "❌ File not present in previous commit"
+          done
 
-        - name: Compare versions
-          id: set-output
-          run: |
-            changed=false
-            new_version=""
-            for env in dev nprd prod; do
-              cur=$(yq e '.version' "charts/datadog/datadog-$env/Chart.yaml")
-              old=$(yq e '.version' "old-$env.yaml")
-              if [ "$cur" != "$old" ]; then
-                changed=true
-                new_version="$cur"
-              fi
-            done
-            echo "version-changed=$changed" >> $GITHUB_OUTPUT
-            echo "new-version=$new_version" >> $GITHUB_OUTPUT
+      - name: Compare versions (very verbose)
+        run: |
+          shopt -s nullglob
+          echo "COMPARISON:"
+          for file in charts/datadog/datadog-*/Chart.yaml; do
+            cur=$(yq e '.dependencies[0].version' "$file")
+            old=$(git show ${{ github.event.before }}:$file 2>/dev/null \
+              | yq e '.dependencies[0].version' - || echo "")
 
-        - name: Debug output
-          run: |
-            echo "Version changed: ${{ steps.compare.outputs.version-changed }}"
-            echo "Changes:"
-            echo '${{ steps.compare.outputs.changes }}' | jq .
+            echo "----------------------------------"
+            echo "File: $file"
+            echo "OLD: [$old]"
+            echo "NEW: [$cur]"
+
+            if [ "$cur" != "$old" ]; then
+              echo ">>> CHANGE DETECTED <<<"
+            else
+              echo "No change"
+            fi
+          done
