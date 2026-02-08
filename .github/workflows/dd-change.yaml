@@ -32,7 +32,7 @@ jobs:
           CHANGED=false
           CHANGES="{}"
 
-          for chart in charts/datadog-*/Chart.yaml; do
+          for chart in charts/datadog/datadog-*/Chart.yaml; do
             env=$(basename "$(dirname "$chart")" | sed 's/datadog-//')
 
             CURRENT_VERSION=$(yq e '.version' "$chart")
