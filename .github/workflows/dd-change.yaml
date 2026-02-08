@@ -50,7 +50,7 @@
             changed=false
             new_version=""
             for env in dev nprd prod; do
-              cur=$(yq e '.version' "charts/datadog-$env/Chart.yaml")
+              cur=$(yq e '.version' "charts/datadog/datadog-$env/Chart.yaml")
               old=$(yq e '.version' "old-$env.yaml")
               if [ "$cur" != "$old" ]; then
                 changed=true
