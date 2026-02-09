@@ -34,8 +34,8 @@ jobs:
           echo "$([ "$CURRENT_DEV" != "$PREV_DEV" ])"
           echo "$([ "$CURRENT_NPRD" != "$PREV_NPRD" ])"
 
-          echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ])" >> $GITHUB_OUTPUT
-          echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ])" >> $GITHUB_OUTPUT
+          echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ] && echo true || echo false) >> $GITHUB_OUTPUT
+          echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ]) && echo true || echo false)" >> $GITHUB_OUTPUT
 
       - name: Promote dev version to nprd
         if: steps.version_check.outputs.dev_changed == 'true'
