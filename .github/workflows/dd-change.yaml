@@ -7,7 +7,7 @@ on:
       - 'charts/datadog/datadog-*/Chart.yaml'
 
 jobs:
-  debug:
+  check-version-change:
     runs-on: ubuntu-latest
 
     outputs:
@@ -51,17 +51,21 @@ jobs:
           echo "start-date=$START_DATE" >> "$GITHUB_OUTPUT"
           echo "end-date=$END_DATE" >> "$GITHUB_OUTPUT"
 
-  notify:
-    needs: debug
-    runs-on: ubuntu-latest
-    if: needs.debug.outputs.version-changed == 'true'
-
-    steps:
-      - name: Echo change details
-        run: |
-          echo "Changes detected:"
-          echo "-----------------"
-          printf "%s\n" "${{ needs.debug.outputs.changes-done }}"
-          echo ""
-          echo "Start date: ${{ needs.debug.outputs.start-date }}"
-          echo "End date:   ${{ needs.debug.outputs.end-date }}"
+  create-standard-change:
+    name: "Create Standard Change"
+    needs: check-version-change
+    if: needs.check-version-change.outputs.version-changed == 'true'
+    uses: adeo/dxp--reusable-github-actions-workflows/.github/workflows/snow-standard-change-create.yml@v1.130.3
+    with:
+      snow-change-template-id: "a485a5ed93870690cdd9bdda6aba109e"
+      snow-change-review-comments: "Datadog Agent Version Update"
+      snow-change-state: 3
+      snow-change-review-status: "1"
+      snow-change-template-variables: |
+        {
+          "targeted_component": "SAAS RESSOURCE",
+          "changes_done": "${{ needs.check-version-change.outputs.changes-done }}", 
+          "adeo_wished_date": "${{ needs.debug.outputs.start-date }}" 
+        }
+      snow-change-planned-start-date: ${{ needs.debug.outputs.start-date }} 
+      snow-change-planned-end-date: ${{ needs.debug.outputs.end-date }} 

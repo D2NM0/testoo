@@ -14,11 +14,6 @@ jobs:
         with:
           ref: main
 
-      - name: Dump PR event
-        run: |
-          echo '${{ toJson(github.event.pull_request) }}'
-
-
       - name: Promote dev version to nprd
         if: startsWith(github.event.pull_request.head.ref, 'dependabot/helm')
         run: |
