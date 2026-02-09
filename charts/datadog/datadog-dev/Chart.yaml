@@ -5,5 +5,5 @@ type: application
 version: 0.1.0
 dependencies:
   - name: datadog
-    version: 3.136.123
+    version: 3.136.1234
     repository: "https://helm.datadoghq.com"
