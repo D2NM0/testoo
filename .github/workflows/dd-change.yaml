@@ -16,43 +16,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Print CURRENT dependency versions
-        run: |
-          shopt -s nullglob
-          echo "CURRENT versions:"
-          for file in charts/datadog/datadog-*/Chart.yaml; do
-            echo "File: $file"
-            yq e '.dependencies[0].version' "$file"
-          done
-
-      - name: Print PREVIOUS dependency versions
-        run: |
-          shopt -s nullglob
-          echo "PREVIOUS versions:"
-          for file in charts/datadog/datadog-*/Chart.yaml; do
-            echo "File: $file"
-            git show ${{ github.event.before }}:$file 2>/dev/null \
-              | yq e '.dependencies[0].version' - \
-              || echo "❌ File not present in previous commit"
-          done
-
       - name: Compare versions (very verbose)
         run: |
-          shopt -s nullglob
-          echo "COMPARISON:"
           for file in charts/datadog/datadog-*/Chart.yaml; do
             cur=$(yq e '.dependencies[0].version' "$file")
             old=$(git show ${{ github.event.before }}:$file 2>/dev/null \
               | yq e '.dependencies[0].version' - || echo "")
-
-            echo "----------------------------------"
-            echo "File: $file"
-            echo "OLD: [$old]"
-            echo "NEW: [$cur]"
-
             if [ "$cur" != "$old" ]; then
-              echo ">>> CHANGE DETECTED <<<"
-            else
-              echo "No change"
+              env=$(basename "$(dirname "$file")")
+              echo Change version of $env from $old to $cur"
             fi
           done
