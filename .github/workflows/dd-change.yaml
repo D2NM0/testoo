@@ -1,14 +1,12 @@
-name: Debug Datadog dependency version
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'charts/datadog/datadog-*/Chart.yaml'
-
 jobs:
   debug:
     runs-on: ubuntu-latest
+
+    outputs:
+      version-changed: ${{ steps.check-versions.outputs.version-changed }}
+      changes-done: ${{ steps.check-versions.outputs.changes_done }}
+      start-date: ${{ steps.check-versions.outputs.start-date }}
+      end-date: ${{ steps.check-versions.outputs.end-date }}
 
     steps:
       - name: Checkout
@@ -16,14 +14,46 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compare versions (very verbose)
+      - name: Check version change
+        id: check-versions
         run: |
+          changed=false
+          changes_done=""
+
           for file in charts/datadog/datadog-*/Chart.yaml; do
             cur=$(yq e '.dependencies[0].version' "$file")
             old=$(git show ${{ github.event.before }}:$file 2>/dev/null \
               | yq e '.dependencies[0].version' - || echo "")
+
             if [ "$cur" != "$old" ]; then
+              changed=true
               env=$(basename "$(dirname "$file")")
-              echo "Change version of $env from $old to $cur"
+
+              changes_done+="Change version of $env from $old to $cur"$'\n'
+
+              START_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+              END_DATE=$(date -d '+1 hour' '+%Y-%m-%d %H:%M:%S')
             fi
           done
+
+          echo "version-changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "changes_done<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$changes_done" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "start-date=$START_DATE" >> "$GITHUB_OUTPUT"
+          echo "end-date=$END_DATE" >> "$GITHUB_OUTPUT"
+
+  notify:
+    needs: debug
+    runs-on: ubuntu-latest
+    if: needs.debug.outputs.version-changed == 'true'
+
+    steps:
+      - name: Echo change details
+        run: |
+          echo "Changes detected:"
+          echo "-----------------"
+          printf "%s\n" "${{ needs.debug.outputs.changes-done }}"
+          echo ""
+          echo "Start date: ${{ needs.debug.outputs.start-date }}"
+          echo "End date:   ${{ needs.debug.outputs.end-date }}"
