@@ -1,4 +1,4 @@
-name: "Promote Release"
+name: "Promote version update"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'charts/datadog/datadog-*/Chart.yaml'
 
 jobs:
-  promote-release:
+  promote-update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
