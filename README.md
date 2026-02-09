@@ -24,13 +24,11 @@ helm repo update
 ```
 
 
-# Agent Version Upgrade 
+## Agent Version Update 
 
-Datadog agent version upgrades across environments (Dev → NPRD → Prod) are automatically managed through a workflow.
+versions updates across environments (Dev → NPRD → Prod) are automatically managed.
 
----
-
-## Workflow
+### Workflow
 
 1. **Dependabot PR for Dev**
    - Dependabot creates a pull request (PR) for the **Dev environment** with the new versions.
