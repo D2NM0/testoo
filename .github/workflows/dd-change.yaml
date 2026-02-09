@@ -24,6 +24,6 @@ jobs:
               | yq e '.dependencies[0].version' - || echo "")
             if [ "$cur" != "$old" ]; then
               env=$(basename "$(dirname "$file")")
-              echo Change version of $env from $old to $cur"
+              echo "Change version of $env from $old to $cur"
             fi
           done
