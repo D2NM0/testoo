@@ -21,10 +21,10 @@ jobs:
           nprd_path="charts/datadog/datadog-nprd/Chart.yaml"
 
           CURRENT_DEV=$(yq '.dependencies[0].version' $dev_path)
-          PREV_DEV=$(git show ${{ github.event.before }}:$dev_path | yq '.dependencies[0].version')
+          PREV_DEV=$(git show HEAD~1:$dev_path | yq '.dependencies[0].version')
           
           CURRENT_NPRD=$(yq '.dependencies[0].version' $nprd_path)
-          PREV_NPRD=$(git show ${{ github.event.before }}:$nprd_path | yq '.dependencies[0].version')
+          PREV_NPRD=$(git show HEAD~1:$nprd_path | yq '.dependencies[0].version')
 
           echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ])" >> $GITHUB_OUTPUT
           echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ])" >> $GITHUB_OUTPUT
