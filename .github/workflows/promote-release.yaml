@@ -1,21 +1,36 @@
-name: "Promote dev version to nprd/prod"
+name: "Promote Release"
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [main]
+    paths:
+      - 'charts/datadog/datadog-*/Chart.yaml'
 
 jobs:
   promote:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
 
+      - name: Check if version changed
+        id: version_check
+        run: |
+          dev_path="charts/datadog/datadog-dev/Chart.yaml"
+          nprd_path="charts/datadog/datadog-nprd/Chart.yaml"
+
+          CURRENT_DEV=$(yq '.dependencies[0].version' $dev_path)
+          PREV_DEV=$(git show ${{ github.event.before }}:$dev_path | yq '.dependencies[0].version')
+          
+          CURRENT_NPRD=$(yq '.dependencies[0].version' $nprd_path)
+          PREV_NPRD=$(git show ${{ github.event.before }}:$nprd_path | yq '.dependencies[0].version')
+
+          echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ] && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ] && echo true || echo false)" >> $GITHUB_OUTPUT
+
       - name: Promote dev version to nprd
-        if: startsWith(github.event.pull_request.head.ref, 'dependabot/helm')
+        if: steps.version_check.outputs.dev_changed == 'true'
         run: |
           DEV_VER=$(yq '.dependencies[].version' charts/datadog/datadog-dev/Chart.yaml)
           yq -i ".dependencies[].version = \"$DEV_VER\"" charts/datadog/datadog-nprd/Chart.yaml
@@ -23,7 +38,7 @@ jobs:
           echo "version=$DEV_VER" >> $GITHUB_ENV
 
       - name: Promote nprd version to prod
-        if: startsWith(github.event.pull_request.head.ref, 'chore/promote-release')
+        if: steps.version_check.outputs.dev_changed == 'true'
         run: |
           NPRD_VER=$(yq '.dependencies[].version' charts/datadog/datadog-nprd/Chart.yaml)
           yq -i ".dependencies[].version = \"$NPRD_VER\"" charts/datadog/datadog-prod/Chart.yaml
@@ -38,4 +53,3 @@ jobs:
           title: "Sync ${{ env.target }} version to ${{ env.version }}"
           branch: "chore/promote-release-${{ env.target }}-${{ env.version }}"
           author: 'github-actions <github-actions@users.noreply.github.com>'
-          body: "Automated Sync to ${{ env.target }} following merge of previous environment."
