@@ -26,8 +26,8 @@ jobs:
           CURRENT_NPRD=$(yq '.dependencies[0].version' $nprd_path)
           PREV_NPRD=$(git show ${{ github.event.before }}:$nprd_path | yq '.dependencies[0].version')
 
-          echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ] && echo true || echo false)" >> $GITHUB_OUTPUT
-          echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ] && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "dev_changed=$([ "$CURRENT_DEV" != "$PREV_DEV" ])" >> $GITHUB_OUTPUT
+          echo "nprd_changed=$([ "$CURRENT_NPRD" != "$PREV_NPRD" ])" >> $GITHUB_OUTPUT
 
       - name: Promote dev version to nprd
         if: steps.version_check.outputs.dev_changed == 'true'
