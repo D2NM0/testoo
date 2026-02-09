@@ -31,11 +31,11 @@ versions updates across environments (Dev → NPRD → Prod) are automatically m
 ### Workflow
 
 1. **Dependabot PR for Dev**
-   - Dependabot creates a pull request (PR) for the **Dev environment** with the new versions.
+   - Dependabot creates a pull request for the **Dev environment** with the new versions.
 
 2. **Progressive Environment Sync**
-   - When a version is updated in **Dev**, a workflow automatically creates a PR for **NPRD**.
-   - When a version is updated in **NPRD**, a workflow automatically creates a PR for **Prod**.
+   - When a version is updated in **Dev**, a workflow automatically creates a PR for **Nprd**.
+   - When a version is updated in **Nprd**, a workflow automatically creates a PR for **Prod**.
 
 3. **Automatic ServiceNow Change Creation**
    - Any version update in an environment triggers the creation of a **ServiceNow standard change**.
