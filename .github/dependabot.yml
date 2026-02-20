@@ -1,14 +1,19 @@
 version: 2
 updates:
-  - package-ecosystem: "helm"
-    directory: "charts/datadog/datadog-dev"  
+  - package-ecosystem: "docker"
+    directory: "charts/datadog/datadog-dev"
     target-branch: "main"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "charts/datadog/datadog-nprd"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+
   - package-ecosystem: "docker"
     directory: "charts/datadog/datadog-prod"
     target-branch: "main"
     schedule:
       interval: "weekly"
-    allow:
-      - dependency-type: "direct"

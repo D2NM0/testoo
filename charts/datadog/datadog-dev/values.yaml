@@ -1031,7 +1031,7 @@ datadog:
       digest: ""
 
       # clusterAgent.image.repository -- Override default registry + image.name for Cluster Agent
-      repository:
+      repository: gcr.io/datadoghq/cluster-agent:7.70.2
 
       # clusterAgent.image.pullPolicy -- Cluster Agent image pullPolicy
       pullPolicy: IfNotPresent

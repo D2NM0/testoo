@@ -1,0 +1,4 @@
+version: "3"
+services:
+  datadog-cluster-agent:
+    image: docker-remote-gcr-io.jfrog.adeo.cloud/datadoghq/cluster-agent:7.70.2
