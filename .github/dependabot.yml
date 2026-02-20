@@ -5,3 +5,10 @@ updates:
     target-branch: "main"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "charts/datadog/datadog-prod"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
