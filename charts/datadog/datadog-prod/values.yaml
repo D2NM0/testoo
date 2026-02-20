@@ -2335,7 +2335,7 @@ datadog:
     # kube-state-metrics.image.repository -- Default kube-state-metrics image repository.
     image:
       repository: registry.k8s.io/kube-state-metrics/kube-state-metrics
-      tag: v2.3.0
+      tag: v2.18.0
 
     rbac:
       # kube-state-metrics.rbac.create -- If true, create & use RBAC resources
